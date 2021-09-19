@@ -1,4 +1,3 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 import random
@@ -25,7 +24,7 @@ numIterations = 100
 def actionRewardFunction(initialPosition, action):
     #this function returns a reward of rewardSize each step unless you are in a terminal state
     #in that case, it returns a reward of zero
-    #it returns  the next state and reward
+    #it returns the next state and reward
     
     
     #first check if we are in a termination state 
@@ -34,7 +33,7 @@ def actionRewardFunction(initialPosition, action):
     if initialPosition in terminationStates:
         return initialPosition, 0
     
-    #if we are not in a termination state, we returne the variable rewardSize 
+    #if we are not in a termination state, we return the variable rewardSize 
     reward = rewardSize
     
     #calculcate next position 
@@ -67,18 +66,22 @@ for it in range(numIterations):
     for state in states:
     
         #the next variable will be equal to the new V iterate by the end of the process
-        weightedRewards = 0
+        # weightedRewards = 0
+        weightedRewards = -np.inf
+
         
         #Compute the Bellman iterate
         for action in actions:
             #compute next position and reward from taking that action
             finalPosition, reward = actionRewardFunction(state, action)
-            ### ADD A SINGLE LINE HERE UPDATING THE VARIABLE weightedRewards
             
+            # Updating weightedRewards => V(s) <- ∑ π(a|s) * ∑ p(s', a| s, a) * (r + y(V(s')))
+            # weightedRewards += 1/(len(actions)) * (reward + gamma * valueMap[finalPosition[0], finalPosition[1]])
+            weightedRewards = max(weightedRewards, (reward + gamma * valueMap[finalPosition[0], finalPosition[1]]))
             
         
         #append Vcurrent-Vnext for the current state
-        deltaState.append(np.abs(copyValueMap[state[0], state[1]]-weightedRewards))
+        deltaState.append(np.abs(copyValueMap[state[0], state[1]] - weightedRewards))
         
         #update the value of the next state, but in the copy rather than the original
         copyValueMap[state[0], state[1]] = weightedRewards
