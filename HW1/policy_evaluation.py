@@ -50,12 +50,12 @@ def actionRewardFunction(initialPosition, action):
     
 # Part A
 # Initialise value map to all zeros
-# valueMap = np.zeros((gridSize, gridSize))
+valueMap = np.zeros((gridSize, gridSize))
 
 # Part B
 # Initialise all of the values as -INF and set the terminal states as 0
-valueMap = np.full((gridSize, gridSize), -np.inf)
-valueMap[0, 0] = valueMap[gridSize - 1, gridSize - 1] = 0
+# valueMap = np.full((gridSize, gridSize), -np.inf)
+# valueMap[0, 0] = valueMap[gridSize - 1, gridSize - 1] = 0
 
 # Define the state space
 states = [[i, j] for i in range(gridSize) for j in range(gridSize)]
@@ -72,10 +72,10 @@ for it in range(numIterations):
     
         # The next variable will be equal to the new V iterate by the end of the process
         # Part A
-        # weightedRewards = 0
+        weightedRewards = 0
 
         # Part B
-        weightedRewards = valueMap[state[0], state[1]]
+        # weightedRewards = valueMap[state[0], state[1]]
 
         # Compute the Bellman iterate
         for action in actions:
