@@ -48,9 +48,24 @@ def actionRewardFunction(initialPosition, action):
     return finalPosition, reward
     
     
+def defineAction(action):
+    if(action == actions[0]):
+        return 'U'
+    elif(action == actions[1]):
+        return 'D'
+    elif(action == actions[2]):
+        return 'R'
+    elif(action == actions[3]):
+        return 'L'
+    else:
+        return '-'
+
 
 # Initialise value map to all zeros 
 valueMap = np.zeros((gridSize, gridSize))
+
+# Policy Map
+policyMap = np.full((gridSize, gridSize), '-')
 
 # Define the state space
 states = [[i, j] for i in range(gridSize) for j in range(gridSize)]
@@ -60,20 +75,29 @@ for it in range(numIterations):
     
     # Make a copy of the value function to manipulate during the algorithm
     copyValueMap = np.copy(valueMap)
-    
+    temp = np.zeros((1,4))
+    i = 0
+
     # This will be set to Vcurrent - Vnext
     deltaState = []
     for state in states:
     
         # The next variable will be equal to the new V iterate by the end of the process
         weightedRewards = 0
-        
+        temp = np.zeros((1, 4))
+        i = 0
+
         # Compute the Bellman iterate
         for action in actions:
             # Compute next position and reward from taking that action
             finalPosition, reward = actionRewardFunction(state, action)
             # Updating weightedRewards => V(s) <- ∑ π(a|s) * ∑ P(s'| s, a) * (r + y(V(s')))
             weightedRewards += 1/(len(actions)) * (reward + gamma * valueMap[finalPosition[0], finalPosition[1]])
+            temp[0][i] = 1/(len(actions)) * (reward + gamma * valueMap[finalPosition[0], finalPosition[1]])
+            i = i + 1
+
+        i = np.argmax(temp)
+        policyMap[state[0], state[1]] = (defineAction(actions[i]), '-')[weightedRewards == 0]
             
         
         # Append Vcurrent-Vnext for the current state
@@ -93,10 +117,15 @@ for it in range(numIterations):
         print("Iteration {}".format(it+1))
         print(valueMap)
         print("")
-        
+
+
+# Print Policy Map
+print("Policy Map")
+print(policyMap)
+
 # Plot how the deltas decay        
 plt.figure(figsize=(20, 10))
 plt.plot(deltas)
 # plt.show()
-#print(deltas)
+# print(deltas)
 
