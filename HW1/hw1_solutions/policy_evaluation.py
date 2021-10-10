@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import random
 
 # discounting rate
-gamma = 1 
+gamma = 0.99
 
 #reward outside of a terminal state
 rewardSize = -1 
