@@ -51,8 +51,8 @@ class QLearningAgent(ReinforcementAgent):
           Should return 0.0 if we have never seen a state
           or the Q node value otherwise
         """
-        if (state, action) in self.Qvalues[(state, action)]:
-            return state, action
+        if (state, action) in self.Qvalues:
+            return self.Qvalues[(state, action)]
         else:
             return 0.0
 
@@ -63,12 +63,12 @@ class QLearningAgent(ReinforcementAgent):
           there are no legal actions, which is the case at the
           terminal state, you should return a value of 0.0.
         """
-        value = [
+        values = [
             self.getQValue(state, action)
             for action in self.getLegalActions(state)
         ]
-        if len(value):
-            return max(value)
+        if len(values):
+            return max(values)
         else:
             return 0.0
 
@@ -80,7 +80,7 @@ class QLearningAgent(ReinforcementAgent):
         """
         value = self.getValue(state)
         actions = [
-            action for action in self.getLegalActions(state)
+            action for action in self.getLegalActions(state) \
             if (self.getQValue(state, action) == value)
         ]
 
@@ -121,6 +121,13 @@ class QLearningAgent(ReinforcementAgent):
           it will be called on your behalf
         """
         gamma = self.discount
+        alpha = self.alpha
+        qValue = self.getQValue(state, action)
+        nextValue = self.getValue(nextState)
+
+        newValue = qValue + alpha * (reward + gamma * nextValue - qValue)
+
+        self.Qvalues[(state, action)] = newValue
         
 
     def getPolicy(self, state):
