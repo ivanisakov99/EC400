@@ -195,7 +195,6 @@ class ApproximateQAgent(PacmanQAgent):
           Should return Q(state,action) = w * featureVector
           where * is the dotProduct operator
         """
-        "*** YOUR CODE HERE (IN CODING ASSIGNMENT 3) ***"
         # Get features
         # features = self.featExtractor.getFeatures(state, action)
         features = IdentityExtractor.getFeatures(state, action)
@@ -210,7 +209,6 @@ class ApproximateQAgent(PacmanQAgent):
         """
            Should update your weights based on transition
         """
-        "*** YOUR CODE HERE (IN CODING ASSIGNMENT 3) ***"
         # Get features
         features = IdentityExtractor.getFeatures(state, action)
         
@@ -229,5 +227,6 @@ class ApproximateQAgent(PacmanQAgent):
         # did we finish training?
         if self.episodesSoFar == self.numTraining:
             # you might want to print your weights here for debugging
-            "*** YOUR CODE HERE (IN CODING ASSIGNMENT 3, OPTIONAL) ***"
+            print("Weights:")
+            print(self.weights)
             pass
