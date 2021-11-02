@@ -211,11 +211,11 @@ class ApproximateQAgent(PacmanQAgent):
         # Get features
         features = self.featExtractor.getFeatures(state, action)
         
-        # ??? getValue is a pure calculation of Q-values, rather than the approximation
+        # The nudge
         nudge = (reward + self.discount * self.getValue(nextState)) - \
             self.getQValue(state, action)
 
-        # w_(t + 1) = w_t + alpha * ((reward_t + gamma * max_a(w_t * x(s_t', a))) - w_t) * x(s_t, a_t)
+        # w_(t + 1) = w_t + alpha * ((reward_t + gamma * max_{a'}(w_t * x(s_t', a'))) - w_t * x(s_t, a_t)) * x(s_t, a_t)
         for feature in features:
             self.weights[feature] = self.weights[feature] + self.alpha * nudge * features[feature]
 
