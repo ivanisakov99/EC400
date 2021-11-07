@@ -47,7 +47,7 @@ class PySTKGrader(Grader):
         config = pystk.RaceConfig(num_kart=1, laps=1)
         config.track = track
         config.players[0].controller = pystk.PlayerConfig.Controller.PLAYER_CONTROL
-        config.render = True
+        # config.render = True
 
         k = pystk.Race(config)
         try:

@@ -20,7 +20,8 @@ class Planner(torch.nn.Module):
         """
         Your code here
         """
-        raise NotImplementedError('Planner.__init__')
+        # raise NotImplementedError('Planner.__init__')
+        
 
     def forward(self, img):
         """

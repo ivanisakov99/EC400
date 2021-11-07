@@ -44,6 +44,6 @@ In Anaconda Spyder, you can press F10 and it will create a nice video of your re
 
 After that, run:
 
-    python3 -m utils.py zengarden lighthouse hacienda snowtuxpeak cornfield_crossing scotland
+    python3 -m utils zengarden lighthouse hacienda snowtuxpeak cornfield_crossing scotland
 
 This should create a directory called “drive data” where images of your controller will be created. <b>You will need these images for the next coding assignment.</b>
