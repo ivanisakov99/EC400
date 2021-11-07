@@ -3,7 +3,7 @@ import pystk
 
 from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms.functional as TF
-import dense_transforms
+from . import dense_transforms
 
 RESCUE_TIMEOUT = 30
 TRACK_OFFSET = 15
