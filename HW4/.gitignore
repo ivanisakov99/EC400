@@ -1,1 +1,3 @@
-./drive_data
+.DS_Store
+drive_data/
+grader/
