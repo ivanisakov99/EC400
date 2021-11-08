@@ -1,4 +1,3 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 import random
@@ -7,16 +6,16 @@ import random
 gamma = 0.99
 
 #reward outside of a terminal state
-rewardSize = -1 
+rewardSize = -1
 
 #size of grid
-gridSize = 4 
+gridSize = 4
 
 #two terminal states
-terminationStates = [[0,0], [gridSize-1, gridSize-1]] 
+terminationStates = [[0,0], [gridSize-1, gridSize-1]]
 
-#four actions depending on where we want to move 
-actions = [[-1, 0], [1, 0], [0, 1], [0, -1]] 
+#four actions depending on where we want to move
+actions = [[-1, 0], [1, 0], [0, 1], [0, -1]]
 
 #number of iterations we want to do
 numIterations = 100
@@ -26,80 +25,93 @@ def actionRewardFunction(initialPosition, action):
     #this function returns a reward of rewardSize each step unless you are in a terminal state
     #in that case, it returns a reward of zero
     #it returns  the next state and reward
-    
-    
-    #first check if we are in a termination state 
-    #in that case, reward is zero and the position remains the same 
-    
+
+
+    #first check if we are in a termination state
+    #in that case, reward is zero and the position remains the same
+
     if initialPosition in terminationStates:
         return initialPosition, 0
-    
-    #if we are not in a termination state, we returne the variable rewardSize 
+
+    #if we are not in a termination state, we returne the variable rewardSize
     reward = rewardSize
-    
-    #calculcate next position 
+
+    #calculcate next position
     finalPosition = np.array(initialPosition) + np.array(action)
-    
+
     #now check if the next position brings you out of the grid
     #if so, the finalposition should be the same as the initial position
-    
-    if -1 in finalPosition or gridSize in finalPosition: 
-        finalPosition = initialPosition
-        
-    return finalPosition, reward
-    
-    
 
-#initialize value map to all zeros 
+    if -1 in finalPosition or gridSize in finalPosition:
+        finalPosition = initialPosition
+
+    return finalPosition, reward
+
+
+def defineAction(action):
+    if (action == actions[0]):
+        return 'U'
+    elif (action == actions[1]):
+        return 'D'
+    elif (action == actions[2]):
+        return 'R'
+    elif (action == actions[3]):
+        return 'L'
+    else:
+        return '-'
+
+#initialize value map to all zeros
 valueMap = np.zeros((gridSize, gridSize))
+
+# Policy Map
+policyMap = np.full((gridSize, gridSize), '-')
 
 #define the state space
 states = [[i, j] for i in range(gridSize) for j in range(gridSize)]
 
 deltas = []
 for it in range(numIterations):
-    
+
     #make a copy of the value function to manipulate during the algorithm
     copyValueMap = np.copy(valueMap)
-    
+
     #this will be set to Vcurrent - Vnext
     deltaState = []
     for state in states:
-    
+
         #the next variable will be equal to the new V iterate by the end of the process
         weightedRewards = 0
-        
+
         #Compute the Bellman iterate
         for action in actions:
             #compute next position and reward from taking that action
             finalPosition, reward = actionRewardFunction(state, action)
-            
+
             #since V_next = \sum_{actions} \pi(a|s) \sum_{s'} p(s'|a,s)     [r + gamma*V_current]
             #we can just go through the sum and add each element to weightedRewards
             #we use here that next state is deterministic
             weightedRewards += (1/len(actions))*(reward+(gamma*valueMap[finalPosition[0], finalPosition[1]])) #note update uses valueMap, not copyValueMap
-        
+
         #append Vcurrent-Vnext for the current state
         deltaState.append(np.abs(copyValueMap[state[0], state[1]]-weightedRewards))
-        
+
         #update the value of the next state, but in the copy rather than the original
         copyValueMap[state[0], state[1]] = weightedRewards
-        
-    #this is now an array of size numIterations, where every entry is an array of Vcurrent-Vmax    
+
+    #this is now an array of size numIterations, where every entry is an array of Vcurrent-Vmax
     deltas.append(deltaState)
-    
+
     #update the value map with what we just computed
     valueMap = copyValueMap
-    
+
     #for selected iterations, print the value function
     if it in [0,1,2,9, 99, numIterations-1]:
         print("Iteration {}".format(it+1))
         print(valueMap)
         print("")
-        
-#plot how the deltas decay        
+
+#plot how the deltas decay
 plt.figure(figsize=(20, 10))
 plt.plot(deltas)
 
 #print(deltas)
-
