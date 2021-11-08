@@ -93,33 +93,38 @@ class PySTKGrader(Grader):
 
 
 class ControllerGrader(PySTKGrader, Grader):
-    """Controller"""
+    """
+    Controller Tests:
+    * For 'zengarden' and 'lighthouse' it must do it under 50s / 500 frames
+    * For 'hacienda' and 'snowtuxpeak' it must do it under 60s / 600 frames
+    * For 'cornfield_crossing' and 'scotland' it must do it under 70s / 700 frames
+    """
     use_planner = False
+    
+    @Case(score=5)
+    def test_zengarden(self):
+        """zengarden"""
+        return self._test('zengarden', 500)
     
     @Case(score=5)
     def test_lighthouse(self):
         """lighthouse"""
-        return self._test('lighthouse', 550)
+        return self._test('lighthouse', 500)
 
     @Case(score=5)
     def test_hacienda(self):
         """hacienda"""
-        return self._test('hacienda', 700)
+        return self._test('hacienda', 600)
 
     @Case(score=5)
     def test_snowtuxpeak(self):
         """snowtuxpeak"""
-        return self._test('snowtuxpeak', 700)
-
-    @Case(score=5)
-    def test_zengarden(self):
-        """zengarden"""
-        return self._test('zengarden', 600)
+        return self._test('snowtuxpeak', 600)
 
     @Case(score=5)
     def test_cornfield_crossing(self):
         """cornfield_crossing"""
-        return self._test('cornfield_crossing', 750)
+        return self._test('cornfield_crossing', 700)
 
     @Case(score=5)
     def test_scotland(self):
