@@ -92,13 +92,11 @@ class PySTKGrader(Grader):
         return kart.overall_distance / track.length, '%0.1f%% done' % (100 * kart.overall_distance / track.length)
 
 
+# * For 'zengarden' and 'lighthouse' it must do it under 50s / 500 frames
+# * For 'hacienda' and 'snowtuxpeak' it must do it under 60s / 600 frames
+# * For 'cornfield_crossing' and 'scotland' it must do it under 70s / 700 frames
 class ControllerGrader(PySTKGrader, Grader):
-    """
-    Controller Tests:
-    * For 'zengarden' and 'lighthouse' it must do it under 50s / 500 frames
-    * For 'hacienda' and 'snowtuxpeak' it must do it under 60s / 600 frames
-    * For 'cornfield_crossing' and 'scotland' it must do it under 70s / 700 frames
-    """
+    """Controller Tests:"""
     use_planner = False
     
     @Case(score=5)

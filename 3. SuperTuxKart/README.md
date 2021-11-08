@@ -1,6 +1,6 @@
 # <ins>HW4: SuperTuxKart</ins>
 
-### Setup. 
+### <ins>Setup</ins>
 In this homework, we will design a simple low-level controller that acts as an auto-pilot to 
 drive in supertuxkart. In a later homework, we will use this auto-pilot to train a vision 
 based driving system. To get started, first download and install SuperTuxKart on your 
@@ -12,8 +12,8 @@ This command may fail because your system lacks other packages. You should then 
 those other packages. Once you have installed this, you should post about your experience on 
 Piazza.
 
-### Assignment. 
-Fill in the function control in the file control.py. The input of this function is an 
+### <ins>Controller</ins>
+Fill in the function control in the file [controller.py](homework/controller.py). The input of this function is an 
 aim-point towards which the car should move, and the current velocity. The aim point uses 
 screen coordinates: [−1, −1] is the top-left of the screen, [1, 1] is the bottom right.
 What it should return is an action. You need to specify:
@@ -33,18 +33,59 @@ your controller by writing:
 
     python3 -m controller [TRACK_NAME] -v
 
-For track name, plug in “zengarden”, “lighthouse,” “hacienda”, “snowtuxpeak”, “cornfield 
-crossing”, “scotland”. You should complete the first two under 50 seconds, the next two 
-under 60 seconds, and the final two under 70 seconds. Note that the output will report the 
-number of frames rather than seconds, and there are ten frames per second.
+For track name, plug in “zengarden”, “lighthouse,” “hacienda”, 
+“snowtuxpeak”, “cornfield_crossing”, “scotland”. You should complete the 
+first two under 50 seconds, the next two under 60 seconds, and the final 
+two under 70 seconds. Note that the output will report the 
+number of frames rather than seconds, and there are ten frames per 
+second. These times are in-game times and will generally be less than 
+the total computational runtime.
 
-### Visualize the results. 
-In Anaconda Spyder, you can press F10 and it will create a nice video of your results. But you need to do something else for the next coding assignment. First, you will need to install EGL using anaconda prompt:
+Grade your controller using:
 
-    conda install -c anaconda mesa-libegl-cos6-x86_64
+    python3 -m grader homework
 
-After that, run:
+### <ins>Planner</ins>
+In the second part, you will train a planner to predict the aim point. 
+The planner takes as input an image and outputs the aim point in the 
+image coordinate. Your controller then maps those aim points to actions.
 
-    python3 -m utils zengarden lighthouse hacienda snowtuxpeak cornfield_crossing scotland
+### Data
+Use your low-level controller to collect a training set for the planner.
 
-This should create a directory called “drive data” where images of your controller will be created. <b>You will need these images for the next coding assignment.</b>
+    python3 -m homework.utils zengarden lighthouse hacienda snowtuxpeak cornfield_crossing scotland
+
+We highly recommend you limit yourself to the above training levels, 
+adding additional training levels may create an unbalanced training set 
+and lead to issues with the final test_grader.
+
+This function creates a dataset of images and corresponding aim points 
+in drive_data . You can visualize the data using:
+
+    python3 -m homework.visualize_data drive_data
+
+Below are a few examples from the master-solution controller:
+
+![Screenshot](pictures/Sample_Data.png)
+
+### Model
+Implement your planner model in `Planner` class of [planner.py](homework/planner.py). Your planner model is a `torch.nn.Module` that takes as input an image tensor and outputs the aiming point in image coordinates (x: 0..127 , y: 0..95 ). We recommend using an encoder-decoder structure to predict a heatmap and extract the peak using a spatial argmax layer in [utils.py](homework/utils.py). Complete the training code in [train.py](homework/train) and train your model using: 
+
+    python3 -m homework.train
+
+### Vision-Based Driving
+Once you completed everything, use:
+
+    python3 -m homework.planner [TRACK_NAME] -v
+
+to drive with your CNN planner and controller.
+
+The red circle in the image below is being predicted using the trained master-solution planner network as a substitute for the ground truth aim point used previously.
+
+![Screenshot](pictures/red_circle.png)
+
+
+Grade your planner using:
+
+    python3 -m grader homework
+
