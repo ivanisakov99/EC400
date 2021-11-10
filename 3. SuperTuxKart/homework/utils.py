@@ -19,7 +19,8 @@ class SuperTuxDataset(Dataset):
         for f in glob(path.join(dataset_path, '*.csv')):
             i = Image.open(f.replace('.csv', '.png'))
             i.load()
-            self.data.append((i, np.loadtxt(f, dtype=np.float32, delimiter=',')))
+            self.data.append(
+                (i, np.loadtxt(f, dtype=np.float32, delimiter=',')))
         self.transform = transform
 
     def __len__(self):
@@ -85,9 +86,7 @@ class PyTux:
             if self.k is not None:
                 self.k.stop()
                 del self.k
-            config = pystk.RaceConfig(num_kart=1, laps=1, 
-            # render=True,
-             track=track)
+            config = pystk.RaceConfig(num_kart=1, laps=1, track=track)
             config.players[0].controller = pystk.PlayerConfig.Controller.PLAYER_CONTROL
 
             self.k = pystk.Race(config)
@@ -118,14 +117,17 @@ class PyTux:
             proj = np.array(state.players[0].camera.projection).T
             view = np.array(state.players[0].camera.view).T
 
-            aim_point_world = self._point_on_track(kart.distance_down_track+TRACK_OFFSET, track)
+            aim_point_world = self._point_on_track(
+                kart.distance_down_track+TRACK_OFFSET, track)
             aim_point_image = self._to_image(aim_point_world, proj, view)
             if data_callback is not None:
-                data_callback(t, np.array(self.k.render_data[0].image), aim_point_image)
+                data_callback(t, np.array(
+                    self.k.render_data[0].image), aim_point_image)
 
             if planner:
                 image = np.array(self.k.render_data[0].image)
-                aim_point_image = planner(TF.to_tensor(image)[None]).squeeze(0).cpu().detach().numpy()
+                aim_point_image = planner(TF.to_tensor(
+                    image)[None]).squeeze(0).cpu().detach().numpy()
 
             current_vel = np.linalg.norm(kart.velocity)
             action = controller(aim_point_image, current_vel)
@@ -137,12 +139,17 @@ class PyTux:
             if verbose:
                 ax.clear()
                 ax.imshow(self.k.render_data[0].image)
-                WH2 = np.array([self.config.screen_width, self.config.screen_height]) / 2
-                ax.add_artist(plt.Circle(WH2*(1+self._to_image(kart.location, proj, view)), 2, ec='b', fill=False, lw=1.5))
-                ax.add_artist(plt.Circle(WH2*(1+self._to_image(aim_point_world, proj, view)), 2, ec='r', fill=False, lw=1.5))
+                WH2 = np.array([self.config.screen_width,
+                               self.config.screen_height]) / 2
+                ax.add_artist(plt.Circle(
+                    WH2*(1+self._to_image(kart.location, proj, view)), 2, ec='b', fill=False, lw=1.5))
+                ax.add_artist(plt.Circle(
+                    WH2*(1+self._to_image(aim_point_world, proj, view)), 2, ec='r', fill=False, lw=1.5))
                 if planner:
-                    ap = self._point_on_track(kart.distance_down_track + TRACK_OFFSET, track)
-                    ax.add_artist(plt.Circle(WH2*(1+aim_point_image), 2, ec='g', fill=False, lw=1.5))
+                    ap = self._point_on_track(
+                        kart.distance_down_track + TRACK_OFFSET, track)
+                    ax.add_artist(plt.Circle(
+                        WH2*(1+aim_point_image), 2, ec='g', fill=False, lw=1.5))
                 plt.pause(1e-3)
 
             self.k.step(action)
@@ -164,11 +171,9 @@ if __name__ == '__main__':
     from argparse import ArgumentParser
     from os import makedirs
 
-
     def noisy_control(aim_pt, vel):
         return control(aim_pt + np.random.randn(*aim_pt.shape) * aim_noise,
                        vel + np.random.randn() * vel_noise)
-
 
     parser = ArgumentParser("Collects a dataset for the high-level planner")
     parser.add_argument('track', nargs='+')
@@ -188,7 +193,6 @@ if __name__ == '__main__':
         n, images_per_track = 0, args.n_images // len(args.track)
         aim_noise, vel_noise = 0, 0
 
-
         def collect(_, im, pt):
             from PIL import Image
             from os import path
@@ -201,9 +205,11 @@ if __name__ == '__main__':
                     f.write('%0.1f,%0.1f' % tuple(pt))
             n += 1
 
-
         while n < args.steps_per_track:
-            steps, how_far = pytux.rollout(track, noisy_control, max_frames=1000, verbose=args.verbose, data_callback=collect)
+            steps, how_far = pytux.rollout(
+                track, noisy_control, 
+                # planner=planner, 
+                max_frames=1000, verbose=args.verbose, data_callback=collect)
             print(steps, how_far)
             # Add noise after the first round
             aim_noise, vel_noise = args.aim_noise, args.vel_noise

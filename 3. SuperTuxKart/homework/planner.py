@@ -15,12 +15,17 @@ def spatial_argmax(logit):
 
 class Planner(torch.nn.Module):
     def __init__(self):
-        super().__init__()
 
-        """
-        Your code here
-        """
-        # raise NotImplementedError('Planner.__init__')
+      super().__init__()
+
+      layers = []
+      layers.append(torch.nn.Conv2d(3,16,5,2,2))
+      layers.append(torch.nn.ReLU())
+      layers.append(torch.nn.Conv2d(16,1,5,2,2))
+      
+
+      self._conv = torch.nn.Sequential(*layers)
+
 
 
     def forward(self, img):
@@ -30,63 +35,11 @@ class Planner(torch.nn.Module):
         @img: (B,3,96,128)
         return (B,2)
         """
-        raise NotImplementedError("Planner.forward")
-
-    # /
-    # class Block(torch.nn.Module):
-    #     def __init__(self, n_input, n_output, kernel_size=3, stride=2):
-    #         super().__init__()
-    #         self.c1 = torch.nn.Conv2d(n_input,
-    #                                   n_output,
-    #                                   kernel_size=kernel_size,
-    #                                   padding=kernel_size // 2,
-    #                                   stride=stride)
-    #         self.c2 = torch.nn.Conv2d(n_output,
-    #                                   n_output,
-    #                                   kernel_size=kernel_size,
-    #                                   padding=kernel_size // 2)
-    #         self.c3 = torch.nn.Conv2d(n_output,
-    #                                   n_output,
-    #                                   kernel_size=kernel_size,
-    #                                   padding=kernel_size // 2)
-    #         self.b1 = torch.nn.BatchNorm2d(n_output)
-    #         self.b2 = torch.nn.BatchNorm2d(n_output)
-    #         self.b3 = torch.nn.BatchNorm2d(n_output)
-    #         self.skip = torch.nn.Conv2d(n_input,
-    #                                     n_output,
-    #                                     kernel_size=1,
-    #                                     stride=stride)
-
-    #     def forward(self, x):
-    #         return F.relu(
-    #             self.b3(
-    #                 self.c3(
-    #                     F.relu(self.b2(self.c2(F.relu(self.b1(self.c1(x))))))))
-    #             + self.skip(x))
-
-    # def __init__(self,
-    #              layers=[16, 32, 64, 128],
-    #              n_output_channels=2,
-    #              kernel_size=3):
-    #     super().__init__()
-    #     self.input_mean = torch.Tensor([0.3521554, 0.30068502, 0.28527516])
-    #     self.input_std = torch.Tensor([0.18182722, 0.18656468, 0.15938024])
-
-    #     L = []
-    #     c = 3
-    #     for l in layers:
-    #         L.append(self.Block(c, l, kernel_size, 2))
-    #         c = l
-    #     self.network = torch.nn.Sequential(*L)
-    #     self.classifier = torch.nn.Linear(c, n_output_channels)
-
-    # def forward(self, x):
-    #     z = self.network(
-    #         (x - self.input_mean[None, :, None, None].to(x.device)) /
-    #         self.input_std[None, :, None, None].to(x.device))
-    #     return self.classifier(z.mean(dim=[2, 3]))
-
-    # /
+        x = self._conv(img)
+        #print(img.shape)
+        #print(x.shape)
+        return spatial_argmax(x[:, 0])
+        # return self.classifier(x.mean(dim=[-2, -1]))
 
 
 def save_model(model):
@@ -107,7 +60,7 @@ def load_model():
 
 if __name__ == '__main__':
     from .controller import control
-    from .utils import PyTux
+    from utils import PyTux
     from argparse import ArgumentParser
 
 
