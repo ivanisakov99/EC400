@@ -171,5 +171,5 @@ class NewLevelrGrader(PySTKGrader, Grader):
 
     @Case(score=10)
     def test_cocoa_temple(self, it=0):
-        """cocoa temple"""
+        """cocoa_temple"""
         return self._test('cocoa_temple', 800)
