@@ -31,7 +31,7 @@ Here are some hints. Note that this is one possible way to solve this, and you m
 Once you are finished writing [controller.py](code/homework/controller.py), you should be able to test
 your controller by writing:
 
-    python3 -m controller [TRACK_NAME] -v
+    python3 -m homework.controller [TRACK_NAME] -v
 
 For track name, plug in “zengarden”, “lighthouse,” “hacienda”, 
 “snowtuxpeak”, “cornfield_crossing”, “scotland”. You should complete the 
