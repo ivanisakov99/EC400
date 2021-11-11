@@ -1,4 +1,5 @@
 import torch
+import torch.nn as NN
 import torch.nn.functional as F
 
 
@@ -16,17 +17,30 @@ def spatial_argmax(logit):
 class Planner(torch.nn.Module):
     def __init__(self):
 
-      super().__init__()
+        super().__init__()
 
-      layers = []
-      layers.append(torch.nn.Conv2d(3,16,5,2,2))
-      layers.append(torch.nn.ReLU())
-      layers.append(torch.nn.Conv2d(16,1,5,2,2))
-      
+        layers = []
+        # layers.append(torch.nn.Conv2d(3, 16, 5, 2, 2))
+        # layers.append(torch.nn.ReLU())
+        # layers.append(torch.nn.Conv2d(16, 1, 5, 2, 2))
 
-      self._conv = torch.nn.Sequential(*layers)
+    #   Mine
+        # layers.append(NN.Conv2d(3, 16, 3, 2, 2))
+        layers.append(NN.Conv2d(3, 16, 3))
+        layers.append(NN.ReLU())
+        # layers.append(NN.MaxPool2d(2, 2))
 
+        layers.append(NN.Conv2d(16, 32, 3))
+        layers.append(NN.ReLU())
+        # layers.append(NN.MaxPool2d(2, 2)) .133 - .068
 
+        layers.append(NN.Conv2d(32, 64, 3))
+        layers.append(NN.ReLU())
+        # layers.append(NN.MaxPool2d(2, 2)) .
+
+        layers.append(NN.Conv2d(64, 1, 5, 2, 2))
+
+        self._conv = torch.nn.Sequential(*layers)
 
     def forward(self, img):
         """
@@ -36,8 +50,8 @@ class Planner(torch.nn.Module):
         return (B,2)
         """
         x = self._conv(img)
-        #print(img.shape)
-        #print(x.shape)
+        # print(img.shape)
+        # print(x.shape)
         return spatial_argmax(x[:, 0])
         # return self.classifier(x.mean(dim=[-2, -1]))
 
@@ -54,25 +68,25 @@ def load_model():
     from torch import load
     from os import path
     r = Planner()
-    r.load_state_dict(load(path.join(path.dirname(path.abspath(__file__)), 'planner.th'), map_location='cpu'))
+    r.load_state_dict(load(path.join(path.dirname(
+        path.abspath(__file__)), 'planner.th'), map_location='cpu'))
     return r
 
 
 if __name__ == '__main__':
     from .controller import control
-    from utils import PyTux
+    from .utils import PyTux
     from argparse import ArgumentParser
-
 
     def test_planner(args):
         # Load model
         planner = load_model().eval()
         pytux = PyTux()
         for t in args.track:
-            steps, how_far = pytux.rollout(t, control, planner=planner, max_frames=1000, verbose=args.verbose)
+            steps, how_far = pytux.rollout(
+                t, control, planner=planner, max_frames=1000, verbose=args.verbose)
             print(steps, how_far)
         pytux.close()
-
 
     parser = ArgumentParser("Test the planner")
     parser.add_argument('track', nargs='+')
