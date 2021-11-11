@@ -1,4 +1,4 @@
-# <ins>HW4: SuperTuxKart</ins>
+# <ins>4.SuperTuxKart</ins>
 
 ### <ins>Setup</ins>
 In this homework, we will design a simple low-level controller that acts as an auto-pilot to 
