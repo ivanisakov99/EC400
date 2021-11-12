@@ -128,7 +128,7 @@ class Grader:
 
 def grade(G, assignment_module, verbose, f_out):
     try:
-        grader = G(assignment_module, verbose)
+        grader = G(assignment_module, verbose = True)
     except NotImplementedError as e:
         if verbose:
             print('  - Function not implemented: %s' % e, file=f_out)

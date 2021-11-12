@@ -26,19 +26,41 @@ class Planner(torch.nn.Module):
 
     #   Mine
         # layers.append(NN.Conv2d(3, 16, 3, 2, 2))
-        layers.append(NN.Conv2d(3, 16, 3))
-        layers.append(NN.ReLU())
+        # layers.append(NN.ReLU())
+        # layers.append(NN.Conv2d(16, 32, 3))
+        # layers.append(NN.ReLU())
         # layers.append(NN.MaxPool2d(2, 2))
+        # layers.append(NN.Conv2d(32, 64, 3, 2, 2))
+        # layers.append(NN.ReLU())
+        # layers.append(NN.MaxPool2d(2, 2))
+        # layers.append(NN.Conv2d(64, 1, 5, 2, 2))
 
-        layers.append(NN.Conv2d(16, 32, 3))
+        input = 3
+        output = 16
+        kernel_size = 5
+        stride = 2
+        layers.append(NN.Conv2d(input, output, kernel_size=kernel_size,
+                                padding=kernel_size // 2, stride=stride))
         layers.append(NN.ReLU())
-        # layers.append(NN.MaxPool2d(2, 2)) .133 - .068
+        # NN.MaxPool2d(2, 2)
 
-        layers.append(NN.Conv2d(32, 64, 3))
+        layers.append(NN.Conv2d(output, 2 * output, kernel_size=kernel_size,
+                                padding=kernel_size // 2, stride=stride))
         layers.append(NN.ReLU())
-        # layers.append(NN.MaxPool2d(2, 2)) .
+        NN.MaxPool2d(2, 2)
 
-        layers.append(NN.Conv2d(64, 1, 5, 2, 2))
+        layers.append(NN.Conv2d(2 * output, 2 * output, kernel_size=kernel_size,
+                                padding=kernel_size // 2, stride=stride))
+        layers.append(NN.ReLU())
+        NN.MaxPool2d(2, 2)
+
+        layers.append(NN.Conv2d(2 * output, 2 * output, kernel_size=kernel_size,
+                                padding=kernel_size // 2, stride=stride))
+        layers.append(NN.ReLU())
+        NN.MaxPool2d(2, 2)
+
+        layers.append(NN.Conv2d(2 * output, 1, kernel_size=kernel_size,
+                                padding=kernel_size // 2, stride=stride))
 
         self._conv = torch.nn.Sequential(*layers)
 
