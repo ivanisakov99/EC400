@@ -141,7 +141,7 @@ def grade(G, assignment_module, verbose, f_out):
     return grader.run(f_out)
 
 
-def grade_all(assignment_module, verbose=False, f_out=sys.stdout):
+def grade_all(assignment_module, verbose=True, f_out=sys.stdout):
     score, total_score = 0, 0
     for G in Grader.__subclasses__():
         if G.has_cases():

@@ -137,22 +137,22 @@ class PlannerGrader(PySTKGrader, Grader):
     @Case(score=10)
     def test_zengarden(self, it=0):
         """zengarden"""
-        return self._test('zengarden', 500)
+        return self._test('zengarden', 700)
 
     @Case(score=10)
     def test_lighthouse(self, it=0):
         """lighthouse"""
-        return self._test('lighthouse', 500)
+        return self._test('lighthouse', 700)
 
     @Case(score=10)
     def test_hacienda(self, it=0):
         """hacienda"""
-        return self._test('hacienda', 600)
+        return self._test('hacienda', 700)
 
     @Case(score=10)
     def test_snowtuxpeak(self, it=0):
         """snowtuxpeak"""
-        return self._test('snowtuxpeak', 600)
+        return self._test('snowtuxpeak', 700)
 
     @Case(score=10)
     def test_cornfield_crossing(self, it=0):
