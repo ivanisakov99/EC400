@@ -20,8 +20,6 @@ class Planner(torch.nn.Module):
         super().__init__()
 
         layers = []
-        
-        # Lowest Loss = 0.014
         input = 3        
         output = 32
         kernel_size = 5
