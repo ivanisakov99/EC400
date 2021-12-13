@@ -28,7 +28,7 @@ Here are some hints. Note that this is one possible way to solve this, and you m
 * If the first entry of your aim point is negative, that means you want to turn left, since the target point is to the left of the center of the screen; and if the first entry of your aim point is positive, this means that you want to turn right.
 * If your aim point is too far left or too far right, this means you are turning hard and should set the drift to True.
 
-Once you are finished writing [controller.py](code/homework/controller.py), you should be able to test
+Once you are finished writing [controller.py](./homework/controller.py), you should be able to test
 your controller by writing:
 
     python3 -m controller [TRACK_NAME] -v
